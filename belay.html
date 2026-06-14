@@ -1,0 +1,122 @@
+<uiView 
+  onLoad="
+    var g = typeof globalThis !== 'undefined' ? globalThis : (typeof window !== 'undefined' ? window : Function('return this')());
+    g.g = g;
+    g.currentZone = 0;
+
+    g.updateHRColors = function() {
+        var colors = ['#888888', '#36E4FF', '#6EE76D', '#FFE322', '#FF9F33', '#FF2A55'];
+        var color = colors[g.currentZone] || '#888888';
+        setStyle('#hr-heart-ico', 'color', color);
+        setStyle('#hr-val-text', 'color', color);
+    };
+
+    g.drawClimbingUI = function(ctx) {
+      var cx = ctx.width / 2;
+      var cy = ctx.width / 2;
+
+      // Draw top curved banner (Cyan for Belay)
+      var r = ctx.width / 2 - 10; 
+      var dy = 0.20 * ctx.width - cy; 
+      if (r > Math.abs(dy)) {
+        var end = Math.asin(dy / r);
+        var start = -Math.PI - end;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, start, end, false);
+        ctx.closePath();
+        ctx.fillStyle = '#00E5FF';
+        ctx.fill();
+      }
+
+      var zone = Number(g.currentZone) || 0;
+      if (typeof buildGenericGauge === 'function') {
+        buildGenericGauge(ctx, zone, 0, 4, 1, 5);
+      } else {
+        var startAngle = 3 * Math.PI / 4;
+        var endAngle = 9 * Math.PI / 4;
+        var totalAngle = endAngle - startAngle;
+        var segmentAngle = totalAngle / 5;
+        var gap = 0.06;
+        var zColors = ['#36E4FF', '#6EE76D', '#FFE322', '#FF9F33', '#FF2A55'];
+        
+        ctx.lineCap = 'butt';
+        for (var i = 0; i < 5; i++) {
+          var sA = startAngle + i * segmentAngle + gap/2;
+          var eA = startAngle + (i+1) * segmentAngle - gap/2;
+          var isActive = (zone === i + 1);
+          ctx.lineWidth = isActive ? 8 : 4;
+          ctx.strokeStyle = isActive ? zColors[i] : '#666666';
+          ctx.beginPath();
+          ctx.arc(cx, cy, (ctx.width - ctx.lineWidth) / 2 - 2, sA, eA, false);
+          ctx.stroke();
+        }
+      }
+
+      if (zone >= 1 && zone <= 5) {
+        var nStart = 3 * Math.PI / 4;
+        var nTotal = (9 * Math.PI / 4) - nStart;
+        var nSeg = nTotal / 5;
+        var angle = nStart + (zone - 1) * nSeg + (nSeg / 2);
+        
+        var rb = ctx.width / 2 - 2;  
+        var rt = ctx.width / 2 - 20; 
+        var bHalf = 0.055;
+
+        var xTip = cx + rt * Math.cos(angle);
+        var yTip = cy + rt * Math.sin(angle);
+        var xBase1 = cx + rb * Math.cos(angle - bHalf);
+        var yBase1 = cy + rb * Math.sin(angle - bHalf);
+        var xBase2 = cx + rb * Math.cos(angle + bHalf);
+        var yBase2 = cy + rb * Math.sin(angle + bHalf);
+
+        ctx.beginPath();
+        ctx.moveTo(xTip, yTip);
+        ctx.lineTo(xBase1, yBase1);
+        ctx.lineTo(xBase2, yBase2);
+        ctx.closePath();
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fill();
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+    };
+  "
+>
+    <div style="background-color:#111111; width:100%; height:100%; position:absolute; top:0; left:0;">
+        <object type="canvas" id="climbGauge" style="position:absolute; top:0; left:0; width:100%; height:100%;" build="ctx => g.drawClimbingUI(ctx);" />
+
+        <!-- Title BELAY -->
+        <div class="sp-t-m p-hc" style="top:calc(12% - 50%e); color:#000000; font-weight:bold; position:absolute; text-align:center;">
+            BELAY
+        </div>
+
+        <div class="sp-vertical-center p-hc" style="top:36%; position:absolute;">
+             <span class="f-ico" style="color:#FFFFFF; margin-right:8px;">&#xF114;</span>
+             <span class="f-num" style="font-size:42px; color:#FFFFFF;">
+                 <eval input="/Zapp/{zapp_index}/Output/belayTime" outputFormat="Duration_Fourdigits" default="0:00" />
+             </span>
+        </div>
+        
+        <!-- Left: Pitches -->
+        <div class="sp-vertical-center" style="top:64%; left:calc(30% - 50%e); position:absolute;">
+             <span class="f-ico" style="color:#FF5500; margin-right:6px;">&#xF265;</span>
+             <span class="f-num" style="font-size:28px; color:#FFFFFF;">
+                 <eval input="/Zapp/{zapp_index}/Output/pitchCount" outputFormat="Count_Threedigits" default="0" />
+             </span>
+        </div>
+
+        <!-- Right: Ratio -->
+        <div class="sp-vertical-center" style="top:64%; left:calc(80% - 50%e); position:absolute;">
+             <span class="f-num" style="font-size:28px; color:#FFFFFF;">
+                 <eval input="/Zapp/{zapp_index}/Output/moveRestRatio" outputFormat="Decimal_Onedigit" default="0.0" />
+             </span>
+             <span class="f-s" style="font-size:14px; color:#888888; margin-left:4px;">Ratio</span>
+        </div>
+
+        <!-- Heart Rate Zone Subscription (invisible) -->
+        <div style="top:0; left:0; width:0px; height:0px; position:absolute;">
+            <eval input="/Zapp/{zapp_index}/Output/hrZoneNum" outputFormat="script x => x" default="0" onValueChanged="g.currentZone = Number(targetData) || 0; g.updateHRColors(); control('#climbGauge', 'REFRESH');" />
+        </div>
+    </div>
+</uiView>

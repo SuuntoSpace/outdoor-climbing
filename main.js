@@ -1,5 +1,6 @@
-var appState, pitchCount, pitchAscent, pitchTime, belayTime, tut, cruxHeight, moveRestRatio, approachDist,
-  startAlt, pitchStartDist, lapTriggered, hrMaxForCrux, lastTime;
+var appState, pitchCount, pitchAscent, pitchTime, belayTime;
+var tut, cruxHeight, moveRestRatio, approachDist, startAlt, pitchStartDist;
+var lapTriggered, hrMaxForCrux, lastTime, currentTemplate;
 
 function onExerciseStart(input, output) {
   appState = 0; // 0 = Approach, 1 = Climbing, 2 = Belay
@@ -16,6 +17,7 @@ function onExerciseStart(input, output) {
   lapTriggered = false;
   hrMaxForCrux = 0;
   lastTime = 0;
+  currentTemplate = 'approach';
 }
 
 function onLap(input, output) {
@@ -33,13 +35,15 @@ function evaluate(input, output) {
     // Approach Phase
     approachDist = (input.Distance || 0);
     output.approachDist = approachDist;
-    // Transition to Climbing if we start going up consistently or if LAP pressed
-    if (vSpeed > 5 || lapTriggered) {
+    // Transition to Climbing ONLY if LAP pressed
+    if (lapTriggered) {
       appState = 1; // Start climbing pitch 1
       pitchCount = 1;
       startAlt = (input.Altitude || 0);
       pitchStartDist = (input.Distance || 0);
       lapTriggered = false;
+      currentTemplate = 'climbing';
+      unload('_cm');
     }
   } else if (appState === 1) {
     // Climbing Phase
@@ -62,6 +66,8 @@ function evaluate(input, output) {
     if (lapTriggered) {
       appState = 2; // Belay
       lapTriggered = false;
+      currentTemplate = 'belay';
+      unload('_cm');
     }
   } else if (appState === 2) {
     // Belay / Resting Phase
@@ -82,6 +88,8 @@ function evaluate(input, output) {
       startAlt = (input.Altitude || 0);
       pitchStartDist = (input.Distance || 0);
       lapTriggered = false;
+      currentTemplate = 'climbing';
+      unload('_cm');
     }
   }
 
@@ -119,9 +127,10 @@ function evaluate(input, output) {
   output.inclinationDeg = inclinationDeg;
 }
 
+
 function getUserInterface(input, output) {
   return {
-    template: 't',
+    template: currentTemplate || 'approach',
     zn: { input: '/Activity/Zones/HeartRate/CurrentZone' },
     segm: 5
   };

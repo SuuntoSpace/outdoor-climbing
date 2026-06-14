@@ -65,7 +65,8 @@
   ],
   "out": [
     {
-      "name": "appState"
+      "name": "appState",
+      "format": "Count_Threedigits"
     },
     {
       "name": "pitchCount",
@@ -110,7 +111,8 @@
       "format": "Decimal_Onedigit"
     },
     {
-      "name": "hrZoneNum"
+      "name": "hrZoneNum",
+      "format": "Count_Threedigits"
     },
     {
       "name": "approachDist",
@@ -129,7 +131,13 @@
   ],
   "template": [
     {
-      "name": "t.html"
+      "name": "approach.html"
+    },
+    {
+      "name": "climbing.html"
+    },
+    {
+      "name": "belay.html"
     }
   ]
 }
