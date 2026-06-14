@@ -1,33 +1,33 @@
 # Outdoor Climbing
-SuuntoPlus App para Escalada Exterior (Deportiva, Clásica y Varios Largos)
+SuuntoPlus App for Outdoor Climbing (Sport, Trad, and Multipitch)
 
-Esta aplicación transforma tu reloj Suunto en un guía y entrenador de escalada exterior. Está diseñada para evitar el uso de pantallas genéricas de montaña y centrarse exclusivamente en las métricas que importan durante la aproximación, la escalada en pared y las reuniones de varios largos.
+This application transforms your Suunto watch into an outdoor climbing guide and coach. It is designed to avoid generic mountaineering screens and focus exclusively on the metrics that matter during the approach, the actual wall climbing, and multipitch belays.
 
-### Características Principales (v1.0):
-La aplicación cuenta con una **Máquina de Estados Inteligente** que altera dinámicamente la interfaz en tu reloj según la fase de la actividad en la que te encuentres, sin necesidad de tocar el reloj (aunque soportado también manualmente mediante el botón LAP).
+### Key Features (v1.0):
+The application features a **Smart State Machine** that dynamically alters the interface on your watch depending on the phase of the activity you are in. It uses a multi-template architecture (`approach.html`, `climbing.html`, `belay.html`) for native, high-performance UI transitions.
 
-#### 1. Fases y Pantallas Dinámicas:
-- **Aproximación (Approach):** Pantalla enfocada en la distancia horizontal recorrida, la altitud base a la que te encuentras y tu Frecuencia Cardíaca actual (cambia de color según la zona).
-- **Escalando (Climbing):** UI extremadamente simple con números gigantes para leerlos mientras escalas. Muestra los metros ascendidos en el largo actual, el tiempo de pegue, tu FC actual y **la Inclinación media del largo en grados (ej. 85°)** basada en triangulación espacial (desnivel vs distancia recorrida).
-- **Reunión / Reposo (Belay):** Al llegar a la reunión (o si estás descansando a pie de vía), muestra el tiempo que llevas parado asegurando, el número del largo actual que acabas de encadenar y tu eficiencia de movimiento (Ratio Movimiento/Reposo).
+#### 1. Dynamic Phases and Screens:
+- **Approach:** Screen focused on horizontal distance covered, base altitude, and your current Heart Rate (with the iconic dynamic color heart rate gauge).
+- **Climbing:** Extremely simple UI with giant numbers to read them while climbing. It shows the meters ascended in the current pitch, the pitch duration, your current HR, and **the average Pitch Inclination in degrees (e.g., 85°)** based on spatial triangulation (ascent vs horizontal distance).
+- **Belay / Resting:** Upon reaching the belay station, it shows the time spent resting/belaying, the current number of pitches climbed, and your movement efficiency (Move/Rest Ratio).
 
-#### 2. Algoritmos Avanzados de Escalada:
-- **Time Under Tension (TUT):** Calcula el tiempo real en el que tu cuerpo está ejerciendo fuerza sostenida ascendiendo, excluyendo el tiempo detenido chapando o buscando presas.
-- **Ratio de Movimiento/Reposo:** Una métrica de eficiencia que calcula tu ritmo de escalada frente al tiempo de descanso en la reunión.
-- **Detección Automática del Crux:** Si detecta pulsaciones muy altas combinadas con una velocidad vertical casi nula, asume que estás superando un tramo clave y guarda esa Altitud como el Crux de la vía.
-- **Inclinación del Largo:** En lugar de calcular una inclinación inestable en tiempo real, calcula el ángulo medio estructural del largo combinando el vector GPS con la presión barométrica mediante teorema de Pitágoras.
+#### 2. Advanced Climbing Algorithms:
+- **Time Under Tension (TUT):** Calculates the actual time your body is exerting sustained upward force, excluding time spent resting, clipping, or searching for holds.
+- **Move/Rest Ratio:** An efficiency metric that calculates your climbing pace versus resting time at the belay.
+- **Automatic Crux Detection:** If it detects very high heart rates combined with almost zero vertical speed, it assumes you are overcoming a key section and saves that altitude as the Crux of the route.
+- **Pitch Inclination:** Instead of calculating an unstable real-time inclination, it calculates the structural average angle of the pitch combining the GPS vector with barometric pressure using the Pythagorean theorem.
 
-### Uso y Transición de Estados:
-1. **Inicio**: Al arrancar la actividad empieza en estado **APPROACH**.
-2. **Escalar**: Transiciona automáticamente a **CLIMBING** si detecta que empiezas a ganar verticalidad. También puedes forzar el inicio del largo pulsando el botón **LAP** a pie de vía.
-3. **Llegar a la Reunión**: Pulsa el botón **LAP** al anclarte a la reunión para aislar el largo y pasar al modo **BELAY** (descanso/asegurar).
-4. **Siguiente Largo**: Al salir de la reunión, presiona **LAP** otra vez. El contador de largos (Pitch) subirá, y comenzará la medición de tu nuevo tramo.
+### Usage and State Transitions:
+1. **Start**: Upon starting the activity, it begins in the **APPROACH** state.
+2. **Climb**: It automatically transitions to **CLIMBING** if it detects consistent vertical gain. You can also force the start of the pitch by pressing the **LAP** button at the base of the route.
+3. **Reach Belay**: Press the **LAP** button when anchoring to the belay station to isolate the pitch and switch to the **BELAY** mode (rest/belay).
+4. **Next Pitch**: When leaving the belay, press **LAP** again. The Pitch counter will increase, and the measurement of your new pitch will begin.
 
-### Métricas Exportadas a Suunto App (.fit):
-Una vez sincronices la actividad, podrás ver en tu teléfono:
-- **Pitches**: Número total de largos.
-- **Pitch Ascent**: Ascensión detallada.
+### Metrics Exported to Suunto App (.fit):
+Once you sync the activity, you will be able to see in your phone:
+- **Pitches**: Total number of pitches.
+- **Pitch Ascent**: Detailed ascent in meters.
 - **Time Under Tension (TUT)**.
-- **Crux Height**: Altitud en metros donde se detectó el paso más duro de la vía.
-- **Move/Rest Ratio**: Eficiencia.
-- **Inclination**: Inclinación media en grados.
+- **Crux Height**: Altitude in meters where the hardest move of the route was detected.
+- **Move/Rest Ratio**: Efficiency.
+- **Inclination**: Average pitch inclination in degrees.
