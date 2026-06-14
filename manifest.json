@@ -1,0 +1,135 @@
+{
+  "name": "Outdoor Climbing",
+  "version": "1.0",
+  "author": "Oscar Muñoz Ferriz",
+  "description": "Pitches,TUT,Crux,Ratio,Approach",
+  "type": "feature",
+  "usage": "workout",
+  "modificationTime": 1718000000,
+  "in": [
+    {
+      "name": "Distance",
+      "source": "/Activity/Move/-1/Distance/Current",
+      "type": "subscribe"
+    },
+    {
+      "name": "AscentMeters",
+      "source": "/Fusion/Altitude/Ascent",
+      "type": "subscribe"
+    },
+    {
+      "name": "DescentMeters",
+      "source": "/Fusion/Altitude/Descent",
+      "type": "subscribe"
+    },
+    {
+      "name": "Altitude",
+      "source": "/Fusion/Altitude/Current",
+      "type": "subscribe"
+    },
+    {
+      "name": "VerticalSpeed",
+      "source": "/Fusion/Altitude/VerticalSpeed",
+      "type": "subscribe"
+    },
+    {
+      "name": "HeartRate",
+      "source": "/Activity/Move/-1/HeartRate/Current",
+      "type": "subscribe"
+    },
+    {
+      "name": "MaxHR",
+      "source": "/Settings/User/MaxHR",
+      "type": "get"
+    },
+    {
+      "name": "Duration",
+      "source": "/Activity/Activity/-1/Duration/Current",
+      "type": "subscribe"
+    },
+    {
+      "name": "Temperature",
+      "source": "/Environment/Weather/Temperature/Current",
+      "type": "subscribe"
+    },
+    {
+      "name": "Speed",
+      "source": "/Fusion/Speed/Current",
+      "type": "subscribe"
+    },
+    {
+      "name": "Battery",
+      "source": "/System/Battery/Level",
+      "type": "subscribe"
+    }
+  ],
+  "out": [
+    {
+      "name": "appState"
+    },
+    {
+      "name": "pitchCount",
+      "log": true,
+      "shownName": "Pitches",
+      "format": "Count_Threedigits"
+    },
+    {
+      "name": "pitchAscent",
+      "log": true,
+      "shownName": "Pitch Ascent",
+      "format": "Count_Threedigits"
+    },
+    {
+      "name": "pitchTime",
+      "log": true,
+      "shownName": "Pitch Time",
+      "format": "Duration_Fourdigits"
+    },
+    {
+      "name": "belayTime",
+      "log": true,
+      "shownName": "Belay Time",
+      "format": "Duration_Fourdigits"
+    },
+    {
+      "name": "tut",
+      "log": true,
+      "shownName": "Time Under Tension",
+      "format": "Duration_Fourdigits"
+    },
+    {
+      "name": "cruxHeight",
+      "log": true,
+      "shownName": "Crux Height",
+      "format": "Count_Threedigits"
+    },
+    {
+      "name": "moveRestRatio",
+      "log": true,
+      "shownName": "Move/Rest Ratio",
+      "format": "Decimal_Onedigit"
+    },
+    {
+      "name": "hrZoneNum"
+    },
+    {
+      "name": "approachDist",
+      "format": "Count_Fourdigits"
+    },
+    {
+      "name": "inclinationDeg",
+      "log": true,
+      "shownName": "Inclination",
+      "format": "Count_Threedigits"
+    },
+    {
+      "name": "sunsetTime",
+      "format": "Duration_Fourdigits"
+    }
+  ],
+  "template": [
+    {
+      "name": "t.html"
+    }
+  ]
+}
