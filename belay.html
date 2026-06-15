@@ -116,7 +116,6 @@
 
         <!-- Heart Rate Zone Subscription (invisible) -->
         <div style="top:0; left:0; width:0px; height:0px; position:absolute;">
-            <eval input="/Zapp/{zapp_index}/Output/hrZoneNum" outputFormat="script x => x" default="0" onValueChanged="g.currentZone = Number(targetData) || 0; g.updateHRColors(); control('#climbGauge', 'REFRESH');" />
+            <eval input="/Activity/Move/-1/HeartRate/Current" outputFormat="HeartRate_Fourdigits" default="--" onValueChanged="var hr = Number(targetData) || 0; var maxHR = 190; var z = 0; if (hr > 0) { if (hr >= Math.round(maxHR * 0.87)) z = 5; else if (hr >= Math.round(maxHR * 0.82)) z = 4; else if (hr >= Math.round(maxHR * 0.77)) z = 3; else if (hr >= Math.round(maxHR * 0.72)) z = 2; else z = 1; } g.currentZone = z; g.updateHRColors(); control('#climbGauge', 'REFRESH');" />
         </div>
-    </div>
 </uiView>

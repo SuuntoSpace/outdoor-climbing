@@ -1,33 +1,43 @@
-# Outdoor Climbing
-SuuntoPlus App for Outdoor Climbing (Sport, Trad, and Multipitch)
+# SuuntoPlus App: Outdoor Climbing
 
-This application transforms your Suunto watch into an outdoor climbing guide and coach. It is designed to avoid generic mountaineering screens and focus exclusively on the metrics that matter during the approach, the actual wall climbing, and multipitch belays.
+This application transforms your Suunto watch into an advanced outdoor climbing guide and coach. Designed specifically for Sport, Trad, and Multipitch climbing, it abandons generic mountaineering layouts to focus exclusively on the precise metrics that matter during the approach, the vertical ascent, and the belay.
 
-### Key Features (v1.0):
-The application features a **Smart State Machine** that dynamically alters the interface on your watch depending on the phase of the activity you are in. It uses a multi-template architecture (`approach.html`, `climbing.html`, `belay.html`) for native, high-performance UI transitions.
+## 🌟 Key Features (v1.0)
 
-#### 1. Dynamic Phases and Screens:
-- **Approach:** Screen focused on horizontal distance covered, base altitude, and your current Heart Rate (with the iconic dynamic color heart rate gauge).
-- **Climbing:** Extremely simple UI with giant numbers to read them while climbing. It shows the meters ascended in the current pitch, the pitch duration, your current HR, and **the average Pitch Inclination in degrees (e.g., 85°)** based on spatial triangulation (ascent vs horizontal distance).
-- **Belay / Resting:** Upon reaching the belay station, it shows the time spent resting/belaying, the current number of pitches climbed, and your movement efficiency (Move/Rest Ratio).
+The application features a **Smart State Machine** that dynamically alters the interface on your watch depending on your current phase. It uses a lightweight, multi-template architecture (`approach.html`, `climbing.html`, `belay.html`) optimized for Suunto's strict memory limits, ensuring instant native transitions.
 
-#### 2. Advanced Climbing Algorithms:
+### 1. Dynamic Phases and Screens
+
+- **Approach Phase:** A screen dedicated to the hike in. Focuses on horizontal distance covered and your current Heart Rate, featuring a dynamic 5-segment Suunto corona gauge and needle to monitor your exertion before reaching the wall.
+- **Climbing Phase:** Extremely clear UI with giant typography for quick glances while on the wall. It displays the meters ascended in the current pitch, pitch duration, your current HR, and the **average Pitch Inclination in degrees (e.g., 85°)** calculated via spatial triangulation.
+- **Belay / Resting Phase:** Upon reaching the anchor, this screen isolates the belay time, displays the current number of pitches climbed, and tracks your movement efficiency (Move/Rest Ratio) so you don't over-rest.
+
+### 2. Advanced Climbing Algorithms
+
 - **Time Under Tension (TUT):** Calculates the actual time your body is exerting sustained upward force, excluding time spent resting, clipping, or searching for holds.
-- **Move/Rest Ratio:** An efficiency metric that calculates your climbing pace versus resting time at the belay.
-- **Automatic Crux Detection:** If it detects very high heart rates combined with almost zero vertical speed, it assumes you are overcoming a key section and saves that altitude as the Crux of the route.
-- **Pitch Inclination:** Instead of calculating an unstable real-time inclination, it calculates the structural average angle of the pitch combining the GPS vector with barometric pressure using the Pythagorean theorem.
+- **Move/Rest Ratio:** An efficiency metric evaluating your active climbing pace versus resting/belaying time.
+- **Automatic Crux Detection:** If the app detects very high heart rates combined with almost zero vertical speed, it assumes you are fighting through the hardest section and logs that altitude as the Crux of the route.
+- **Pitch Inclination:** Calculates the structural average angle of the pitch combining the GPS vector with barometric pressure using the Pythagorean theorem, providing a reliable grade indicator.
 
-### Usage and State Transitions:
-1. **Start**: Upon starting the activity, it begins in the **APPROACH** state.
-2. **Climb**: It automatically transitions to **CLIMBING** if it detects consistent vertical gain. You can also force the start of the pitch by pressing the **LAP** button at the base of the route.
-3. **Reach Belay**: Press the **LAP** button when anchoring to the belay station to isolate the pitch and switch to the **BELAY** mode (rest/belay).
-4. **Next Pitch**: When leaving the belay, press **LAP** again. The Pitch counter will increase, and the measurement of your new pitch will begin.
+## 🧗 Usage and Navigation
 
-### Metrics Exported to Suunto App (.fit):
-Once you sync the activity, you will be able to see in your phone:
-- **Pitches**: Total number of pitches.
-- **Pitch Ascent**: Detailed ascent in meters.
-- **Time Under Tension (TUT)**.
-- **Crux Height**: Altitude in meters where the hardest move of the route was detected.
-- **Move/Rest Ratio**: Efficiency.
+The app relies strictly on the physical **LAP** button to ensure you are in complete control of the state machine. Automatic transitions have been disabled to prevent false positives from GPS drift at the crag.
+
+1. **Start**: Upon starting the activity, the app begins in the **APPROACH** state.
+2. **Start Climbing**: When you are tied in and leaving the ground, press the **LAP** button. The screen will instantly change to **CLIMBING**, starting the pitch metrics from zero.
+3. **Reach Belay**: When you reach the anchor and clip in, press the **LAP** button to isolate the pitch. The screen will switch to **BELAY** mode.
+4. **Next Pitch**: When leaving the belay to start the next pitch, press **LAP** again. The Pitch counter will increase by 1, and the watch will return to the **CLIMBING** screen.
+
+## 📊 Metrics Exported to Suunto App (.fit)
+
+Once you sync your watch with the Suunto App on your phone, you will be able to analyze:
+
+- **Total Pitches**: Number of pitches completed.
+- **Pitch Ascent**: Total vertical meters climbed per pitch.
+- **Time Under Tension (TUT)**: Total active effort time.
+- **Crux Height**: Altitude in meters where the hardest move was detected.
+- **Move/Rest Ratio**: Overall climbing efficiency.
 - **Inclination**: Average pitch inclination in degrees.
+
+## 🛠 Technical Notes
+This app has been heavily optimized for Suunto physical watches. The data subscriptions (`in`) have been strictly limited to bypass firmware memory caps, and the UI layer relies on continuous dynamic event triggers (`onValueChanged`) to ensure the canvas gauge draws instantly upon template switching without blocking the main event loop.

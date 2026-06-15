@@ -1,6 +1,6 @@
 var appState, pitchCount, pitchAscent, pitchTime, belayTime;
 var tut, cruxHeight, moveRestRatio, approachDist, startAlt, pitchStartDist;
-var lapTriggered, hrMaxForCrux, lastTime, currentTemplate;
+var lapTriggered, hrMaxForCrux, lastTime, currentTemplate, appTick;
 
 function onExerciseStart(input, output) {
   appState = 0; // 0 = Approach, 1 = Climbing, 2 = Belay
@@ -18,6 +18,7 @@ function onExerciseStart(input, output) {
   hrMaxForCrux = 0;
   lastTime = 0;
   currentTemplate = 'approach';
+  appTick = 0;
 }
 
 function onLap(input, output) {
@@ -27,6 +28,25 @@ function onLap(input, output) {
 function evaluate(input, output) {
   var vSpeed = (input.VerticalSpeed || 0) * 60; // m/min
   var hr = Math.round((input.HeartRate || 0) * 60);
+
+  if (typeof appState === 'undefined') {
+    appState = 0;
+    pitchCount = 0;
+    pitchAscent = 0;
+    pitchTime = 0;
+    belayTime = 0;
+    tut = 0;
+    cruxHeight = 0;
+    moveRestRatio = 0.0;
+    approachDist = 0;
+    startAlt = 0;
+    pitchStartDist = 0;
+    lapTriggered = false;
+    hrMaxForCrux = 0;
+    lastTime = 0;
+    currentTemplate = 'approach';
+    appTick = 0;
+  }
 
   // Handle delta time assuming 1 sec evaluates, but fallback just in case
   var dt = 1;

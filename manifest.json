@@ -13,16 +13,6 @@
       "type": "subscribe"
     },
     {
-      "name": "AscentMeters",
-      "source": "/Fusion/Altitude/Ascent",
-      "type": "subscribe"
-    },
-    {
-      "name": "DescentMeters",
-      "source": "/Fusion/Altitude/Descent",
-      "type": "subscribe"
-    },
-    {
       "name": "Altitude",
       "source": "/Fusion/Altitude/Current",
       "type": "subscribe"
@@ -41,26 +31,6 @@
       "name": "MaxHR",
       "source": "/Settings/User/MaxHR",
       "type": "get"
-    },
-    {
-      "name": "Duration",
-      "source": "/Activity/Activity/-1/Duration/Current",
-      "type": "subscribe"
-    },
-    {
-      "name": "Temperature",
-      "source": "/Environment/Weather/Temperature/Current",
-      "type": "subscribe"
-    },
-    {
-      "name": "Speed",
-      "source": "/Fusion/Speed/Current",
-      "type": "subscribe"
-    },
-    {
-      "name": "Battery",
-      "source": "/System/Battery/Level",
-      "type": "subscribe"
     }
   ],
   "out": [
@@ -112,7 +82,7 @@
     },
     {
       "name": "hrZoneNum",
-      "format": "Count_Threedigits"
+      "format": "Decimal_Twodigits"
     },
     {
       "name": "approachDist",
