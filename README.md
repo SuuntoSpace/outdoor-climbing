@@ -21,10 +21,11 @@ The application features a **Smart State Machine** that dynamically alters the i
 
 ## 🧗 Usage and Navigation
 
-The app relies strictly on the physical **LAP** button to ensure you are in complete control of the state machine. Automatic transitions have been disabled to prevent false positives from GPS drift at the crag.
+The app is controlled primarily via the physical **LAP** button, but it also includes a smart detection algorithm to handle transitions automatically if you forget to press it.
 
 1. **Start**: Upon starting the activity, the app begins in the **APPROACH** state.
 2. **Start Climbing**: When you are tied in and leaving the ground, press the **LAP** button. The screen will instantly change to **CLIMBING**, starting the pitch metrics from zero.
+   * *Auto-detect*: If you forget to press LAP, the app will automatically transition to **CLIMBING** once it detects 15 seconds of sustained vertical speed (> 4 m/min).
 3. **Reach Belay**: When you reach the anchor and clip in, press the **LAP** button to isolate the pitch. The screen will switch to **BELAY** mode.
 4. **Next Pitch**: When leaving the belay to start the next pitch, press **LAP** again. The Pitch counter will increase by 1, and the watch will return to the **CLIMBING** screen.
 

@@ -1,6 +1,6 @@
 var appState, pitchCount, pitchAscent, pitchTime, belayTime;
 var tut, cruxHeight, moveRestRatio, approachDist, startAlt, pitchStartDist;
-var lapTriggered, hrMaxForCrux, lastTime, currentTemplate, appTick;
+var lapTriggered, hrMaxForCrux, lastTime, currentTemplate, appTick, climbDetectTimer;
 
 function onExerciseStart(input, output) {
   appState = 0; // 0 = Approach, 1 = Climbing, 2 = Belay
@@ -46,6 +46,7 @@ function evaluate(input, output) {
     lastTime = 0;
     currentTemplate = 'approach';
     appTick = 0;
+    climbDetectTimer = 0;
   }
 
   // Handle delta time assuming 1 sec evaluates, but fallback just in case
@@ -55,13 +56,22 @@ function evaluate(input, output) {
     // Approach Phase
     approachDist = (input.Distance || 0);
     output.approachDist = approachDist;
-    // Transition to Climbing ONLY if LAP pressed
-    if (lapTriggered) {
+    
+    // Automatic transition detection: Consistent vertical speed indicates climbing
+    if (vSpeed >= 4) {
+      climbDetectTimer += dt;
+    } else if (vSpeed < 2) {
+      climbDetectTimer = 0;
+    }
+
+    // Transition to Climbing if LAP pressed OR auto-detected (e.g. >15s of vertical climbing)
+    if (lapTriggered || climbDetectTimer >= 15) {
       appState = 1; // Start climbing pitch 1
       pitchCount = 1;
       startAlt = (input.Altitude || 0);
       pitchStartDist = (input.Distance || 0);
       lapTriggered = false;
+      climbDetectTimer = 0;
       currentTemplate = 'climbing';
       unload('_cm');
     }
